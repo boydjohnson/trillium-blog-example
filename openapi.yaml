@@ -1,0 +1,247 @@
+openapi: 3.0.0
+info:
+  title: Trillium Example Blog
+  description: A multi-author blog with a REST interface and Yew WASM frontend.
+  version: 0.0.1
+
+servers:
+  - url: http://127.0.0.1:8080
+    description: local dev environment
+
+paths:
+  /login:
+    post:
+      summary: Create a new JWT
+      description: Log the user in using username and password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: The username and password were good.
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: The body was not correct JSON, or was missing.
+        '403':
+          description: The username and password did not authenticate.
+  /users:
+    post:
+      summary: Create User
+      description: New User Signup.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: You created a user.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: integer
+                  username: string
+                  key: string
+    get:
+      summary: List Users
+      description: List the users.
+      responses:
+        '200':
+          description: A Ok.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: integer
+                    username: string
+  /users/self:
+    get:
+      summary: Get info about the logged in user
+      responses:
+        '200':
+          description: A Ok.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: integer
+                  username: string
+  /blogs:
+    get:
+      summary: Return a list of blogs.
+      responses:
+        '200':
+          description: A Ok.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: integer
+                    slug: string
+                    title: string
+                    description: string
+        '404':
+          description: There are no blogs.        
+    post:
+      summary: Create a new blog.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: string
+                description: string
+      responses:
+        '201':
+          description: You created a blog.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: integer
+                  slug: string
+                  title: string
+                  description: string
+        '401':
+          description: The client's identity is not known to the server.
+  /blogs/{blogId}/authors:
+    get:
+      summary: List the authors of a blog.
+      responses:
+        '200':
+          description: A Ok.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: integer
+                    username: string
+    post:
+      summary: Invite a user to be an author of a blog.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id: integer
+  /blogs/{blogId}/posts:
+    get:
+      summary: List all the posts of a blog.
+      responses:
+        '200':
+          description: You are reading all the blog posts.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: integer
+                  slug: string
+                  title: string
+                  description: string
+    post:
+      summary: Create a new post.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title: string
+                text: string
+                tags: array
+                items:
+                  type: integer
+      responses:
+        '201':
+          description: You have created a blog post.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: integer
+                  slug: string
+                  title: string
+                  text: string
+                  tags: array
+                  items:
+                    type: string
+        '401':
+          description: The client's identity was not known.
+        '403':
+          description: The JWT did not authenticate.
+  /blogs/{blogId}/tags:
+    post:
+      summary: Create a new tag for a blog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag: string
+      responses:
+        '201':
+          description: You have created a tag.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: integer
+                  tag: string
+        '401':
+          description: The client's identity was not known.
+        '403':
+          description: The JWT did not authenticate.
+    get:
+      summary: List the tags for a blog.
+      responses:
+        '200':
+          description: You are listing the tags of the blog.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id: integer
+                    tag: string

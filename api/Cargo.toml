@@ -1,0 +1,15 @@
+[package]
+name = "trillium-blog"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sqlx = { version = "0.5", features = ["postgres", "runtime-tokio-rustls"] }
+trillium = "0.2"
+trillium-logger = "0.4"
+trillium-router = "0.3"
+trillium-tokio = "0.2"
+tokio = { version = "1.12", features = ["rt-multi-thread", "macros"] }
+types = { path = "../types" }

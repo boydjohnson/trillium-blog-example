@@ -1,0 +1,6 @@
+CREATE TABLE posts (
+    id INT GENERATED ALWAYS AS IDENTITY,
+    title VARCHAR NOT NULL,
+    body VARCHAR NOT NULL,
+    PRIMARY KEY (id)
+);

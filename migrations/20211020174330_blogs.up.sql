@@ -1,0 +1,7 @@
+CREATE TABLE blogs (
+    id INT GENERATED ALWAYS AS IDENTITY,
+    title VARCHAR NOT NULL,
+    slug VARCHAR NOT NULL UNIQUE,
+    descrip VARCHAR NOT NULL,
+    PRIMARY KEY (id)    
+);

@@ -8,7 +8,7 @@ pub struct UsersRequest {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct UsersResponse {
-    pub id: i64,
+    pub id: i32,
     pub username: String,
     pub key: String,
 }

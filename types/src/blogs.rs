@@ -8,7 +8,7 @@ pub struct NewBlogRequest {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BlogResponse {
-    id: i64,
+    id: i32,
     slug: String,
     title: String,
     description: String,

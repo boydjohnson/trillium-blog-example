@@ -6,11 +6,13 @@ mod users;
 
 pub fn router() -> Router {
     Router::new()
-        .get("/", "Hello, World")
         .post("/login", users::login)
-        .get("/users", "List All the Users")
+        .get("/users", (json_web_token::user_handler, users::get_users))
         .post("/users", users::post_users)
-        .get("/users/self", "Return info about the current user.")
+        .get(
+            "/users/self",
+            (json_web_token::user_handler, users::get_users_self),
+        )
         .get("/blogs", "List all the blogs.")
         .post("/blogs", "Create a blog")
         .get(

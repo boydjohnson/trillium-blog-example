@@ -2,19 +2,19 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct UsersRequest {
-    username: String,
-    password: String,
+    pub username: String,
+    pub password: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct UsersResponse {
-    id: i64,
-    username: String,
-    key: String,
+    pub id: i64,
+    pub username: String,
+    pub key: String,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct User {
-    id: i64,
-    username: String,
+    pub id: i32,
+    pub username: String,
 }

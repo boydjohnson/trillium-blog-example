@@ -9,7 +9,7 @@ pub struct NewPostRequest {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PostResponse {
-    id: i64,
+    id: i32,
     title: String,
     slug: String,
     text: String,

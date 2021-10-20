@@ -14,7 +14,7 @@ pub fn router() -> Router {
             "/users/self",
             (json_web_token::user_handler, users::get_users_self),
         )
-        .get("/blogs", "List all the blogs.")
+        .get("/blogs", blogs::get_blogs)
         .post(
             "/blogs",
             (

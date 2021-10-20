@@ -40,3 +40,17 @@ pub async fn post_blogs_post(conn: Conn) -> Conn {
         conn
     }
 }
+
+pub async fn get_blogs(conn: Conn) -> Conn {
+    if let Some(pool) = conn.state::<Pool<Postgres>>() {
+        match db::blogs::list_blogs(pool).await {
+            Ok(blogs) => conn.with_status(Status::Ok).with_json(&blogs),
+            Err(e) => {
+                log::warn!("GET /blogs database error: {:?}", e);
+                conn.with_status(Status::InternalServerError)
+            }
+        }
+    } else {
+        conn.with_status(Status::InternalServerError)
+    }
+}

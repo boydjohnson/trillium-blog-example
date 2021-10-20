@@ -44,50 +44,31 @@ pub async fn login(mut conn: Conn) -> Conn {
     }
 }
 
-#[derive(Debug, Clone)]
-pub enum UserAuth {
-    User(User),
-    Forbidden,
-}
-
 pub async fn get_users(conn: Conn) -> Conn {
-    if let Some(user) = conn.state::<UserAuth>() {
-        match user {
-            &UserAuth::User(_) => {
-                if let Some(pool) = conn.state::<Pool<Postgres>>() {
-                    match db::users::list_users(pool).await {
-                        Ok(res) => conn.with_status(Status::Ok).with_json(&res),
-                        Err(e) => {
-                            log::warn!("GET /users returned a db error: {:?}", e);
-                            conn.with_status(Status::InternalServerError)
-                        }
-                    }
-                } else {
-                    log::warn!("GET /users expected pool state.");
-
+    if conn.state::<User>().is_some() {
+        if let Some(pool) = conn.state::<Pool<Postgres>>() {
+            match db::users::list_users(pool).await {
+                Ok(res) => conn.with_status(Status::Ok).with_json(&res),
+                Err(e) => {
+                    log::warn!("GET /users returned a db error: {:?}", e);
                     conn.with_status(Status::InternalServerError)
                 }
             }
-            &UserAuth::Forbidden => {
-                log::info!("GET /users was forbidden");
-                conn.with_status(Status::Forbidden)
-            }
+        } else {
+            log::warn!("GET /users expected pool state.");
+
+            conn.with_status(Status::InternalServerError)
         }
     } else {
-        log::warn!("GET /users missing user_handler");
-        conn.with_status(Status::InternalServerError)
+        conn
     }
 }
 
 pub async fn get_users_self(conn: Conn) -> Conn {
-    if let Some(user) = conn.state::<UserAuth>().cloned() {
-        match user {
-            UserAuth::User(ref u) => conn.with_status(Status::Ok).with_json(u),
-            UserAuth::Forbidden => conn.with_status(Status::Forbidden),
-        }
+    if let Some(user) = conn.state::<User>().cloned() {
+        conn.with_status(Status::Ok).with_json(&user)
     } else {
-        log::warn!("GET /users missing user handler");
-        conn.with_status(Status::InternalServerError)
+        conn
     }
 }
 

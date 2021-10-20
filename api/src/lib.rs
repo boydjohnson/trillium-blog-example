@@ -9,7 +9,7 @@ pub fn router() -> Router {
         .get("/", "Hello, World")
         .post("/login", "new_post")
         .get("/users", "List All the Users")
-        .post("/users", "Create a User.")
+        .post("/users", users::post_users)
         .get("/users/self", "Return info about the current user.")
         .get("/blogs", "List all the blogs.")
         .post("/blogs", "Create a blog")

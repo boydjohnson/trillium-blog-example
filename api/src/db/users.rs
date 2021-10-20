@@ -31,13 +31,22 @@ pub async fn get_user_by_username_and_password(
 ) -> Result<UsersResponse, DbError> {
     let password_starting = user.password;
 
-    let user = sqlx::query_as!(
+    let user = match sqlx::query_as!(
         UserWithPassword,
         "SELECT id, username, psswd as password from users where username = $1 LIMIT 1",
         user.username,
     )
     .fetch_one(pool)
-    .await?;
+    .await
+    {
+        Ok(user) => user,
+        Err(e) => {
+            if let sqlx::Error::RowNotFound = e {
+                return Err(DbError::PasswordNotCorrect);
+            }
+            return Err(DbError::from(e));
+        }
+    };
 
     let UserWithPassword {
         id,

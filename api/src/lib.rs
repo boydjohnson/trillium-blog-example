@@ -14,7 +14,7 @@ pub fn router() -> Router {
             "/users/self",
             (json_web_token::user_handler, users::get_users_self),
         )
-        .get("/blogs", "List all the blogs.")
+        .get("/blogs", blogs::get_blogs)
         .post(
             "/blogs",
             (
@@ -23,16 +23,13 @@ pub fn router() -> Router {
                 blogs::post_blogs_post,
             ),
         )
-        .get(
-            "/blogs/{blog_id}/authors",
-            "List the authors of a blog post",
-        )
+        .get("/blogs/:blog_id/authors", "List the authors of a blog post")
         .post(
-            "/blogs/{blog_id}/authors",
+            "/blogs/:blog_id/authors",
             "Create an invitation for a new author of a blog.",
         )
-        .get("/blogs/{blog_id}/posts", "Get all the posts of a blog.")
-        .post("/blogs/{blog_id}/posts", "Create a new post")
-        .get("/blogs/{blog_id}/tags", "List all the tags for a blog.")
-        .post("/blogs/{blog_id}/tags", "Create a new tag for a blog.")
+        .get("/blogs/:blog_id/posts", "Get all the posts of a blog.")
+        .post("/blogs/:blog_id/posts", "Create a new post")
+        .get("/blogs/:blog_id/tags", "List all the tags for a blog.")
+        .post("/blogs/:blog_id/tags", "Create a new tag for a blog.")
 }

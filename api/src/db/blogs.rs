@@ -55,6 +55,15 @@ pub async fn create_blog(
     }
 }
 
+pub async fn list_blogs(pool: &Pool<Postgres>) -> Result<Vec<BlogResponse>, DbError> {
+    Ok(sqlx::query_as!(
+        BlogResponse,
+        "SELECT id, title, slug, descrip as description FROM blogs;"
+    )
+    .fetch_all(pool)
+    .await?)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

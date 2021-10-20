@@ -1,0 +1,58 @@
+@startuml
+hide circle
+skinparam linetype ortho
+
+entity "**blog_authors**" {
+  + ""id"": //integer [PK]//
+  --
+  *""blog_id"": //integer [FK]//
+  *""user_id"": //integer [FK]//
+  ""accepted"": //boolean //
+}
+
+entity "**blogs**" {
+  + ""id"": //integer [PK]//
+  --
+  *""title"": //character varying //
+  *""slug"": //character varying //
+  *""descrip"": //character varying //
+}
+
+entity "**posts**" {
+  + ""id"": //integer [PK]//
+  --
+  *""title"": //character varying //
+  *""body"": //character varying //
+  *""blog_id"": //integer [FK]//
+}
+
+entity "**tags**" {
+  + ""id"": //integer [PK]//
+  --
+  *""tag"": //character varying //
+}
+
+entity "**tags_posts**" {
+  + ""id"": //integer [PK]//
+  --
+  *""tag_id"": //integer [FK]//
+  *""post_id"": //integer [FK]//
+}
+
+entity "**users**" {
+  + ""id"": //integer [PK]//
+  --
+  *""username"": //character varying //
+  *""psswd"": //character varying //
+}
+
+"**blog_authors**"   }--  "**blogs**"
+
+"**blog_authors**"   }--  "**users**"
+
+"**posts**"   }--  "**blogs**"
+
+"**tags_posts**"   }--  "**posts**"
+
+"**tags_posts**"   }--  "**tags**"
+@enduml

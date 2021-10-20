@@ -79,6 +79,18 @@ pub async fn get_users(conn: Conn) -> Conn {
     }
 }
 
+pub async fn get_users_self(conn: Conn) -> Conn {
+    if let Some(user) = conn.state::<UserAuth>().cloned() {
+        match user {
+            UserAuth::User(ref u) => conn.with_status(Status::Ok).with_json(u),
+            UserAuth::Forbidden => conn.with_status(Status::Forbidden),
+        }
+    } else {
+        log::warn!("GET /users missing user handler");
+        conn.with_status(Status::InternalServerError)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

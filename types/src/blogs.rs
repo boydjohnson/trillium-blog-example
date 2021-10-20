@@ -2,14 +2,14 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NewBlogRequest {
-    title: String,
-    description: String,
+    pub title: String,
+    pub description: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct BlogResponse {
-    id: i32,
-    slug: String,
-    title: String,
-    description: String,
+    pub id: i32,
+    pub slug: String,
+    pub title: String,
+    pub description: String,
 }

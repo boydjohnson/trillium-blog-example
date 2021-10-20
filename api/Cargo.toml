@@ -13,6 +13,7 @@ hmac = "0.11"
 jwt = "0.15"
 lazy_static = "1.4"
 log = "0.4"
+regex = "1.5"
 sha2 = "0.9"
 sqlx = { version = "0.5", features = ["postgres", "runtime-tokio-rustls"] }
 trillium = "0.2"

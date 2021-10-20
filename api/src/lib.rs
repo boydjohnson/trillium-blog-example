@@ -7,7 +7,7 @@ mod users;
 pub fn router() -> Router {
     Router::new()
         .get("/", "Hello, World")
-        .post("/login", "new_post")
+        .post("/login", users::login)
         .get("/users", "List All the Users")
         .post("/users", users::post_users)
         .get("/users/self", "Return info about the current user.")

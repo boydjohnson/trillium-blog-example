@@ -57,3 +57,9 @@ pub async fn get_user_by_username_and_password(
         Err(DbError::PasswordNotCorrect)
     }
 }
+
+pub async fn list_users(pool: &Pool<Postgres>) -> Result<Vec<User>, DbError> {
+    Ok(sqlx::query_as!(User, "SELECT id, username from users;")
+        .fetch_all(pool)
+        .await?)
+}

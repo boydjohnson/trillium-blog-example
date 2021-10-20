@@ -1,6 +1,8 @@
 use trillium_router::Router;
 
 pub mod db;
+pub mod json_web_token;
+mod users;
 
 pub fn router() -> Router {
     Router::new()

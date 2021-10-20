@@ -1,7 +1,8 @@
 use trillium_router::Router;
 
-pub mod db;
-pub mod json_web_token;
+mod blogs;
+mod db;
+mod json_web_token;
 mod users;
 
 pub fn router() -> Router {
@@ -14,7 +15,14 @@ pub fn router() -> Router {
             (json_web_token::user_handler, users::get_users_self),
         )
         .get("/blogs", "List all the blogs.")
-        .post("/blogs", "Create a blog")
+        .post(
+            "/blogs",
+            (
+                json_web_token::user_handler,
+                blogs::post_blogs_pre,
+                blogs::post_blogs_post,
+            ),
+        )
         .get(
             "/blogs/{blog_id}/authors",
             "List the authors of a blog post",

@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 
+pub mod blogs;
 pub mod users;
 
 #[derive(Debug)]

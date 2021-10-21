@@ -23,7 +23,7 @@ pub fn router() -> Router {
                 blogs::post_blogs_post,
             ),
         )
-        .get("/blogs/:blog_id/authors", "List the authors of a blog post")
+        .get("/blogs/:blog_id/authors", blogs::get_blog_authors)
         .post(
             "/blogs/:blog_id/authors",
             "Create an invitation for a new author of a blog.",

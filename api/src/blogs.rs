@@ -12,12 +12,16 @@ pub async fn post_blogs_pre(mut conn: Conn) -> Conn {
     match conn.deserialize::<NewBlogRequest>().await {
         Ok(new_blog) => {
             if let Some(pool) = conn.state::<Pool<Postgres>>() {
-                match db::blogs::create_blog(pool, &new_blog).await {
-                    Ok(resp) => conn.with_state(resp),
-                    Err(e) => {
-                        log::info!("POST /blogs error from database: {:?}", e);
-                        conn.with_status(Status::InternalServerError)
+                if let Some(user) = conn.state::<User>() {
+                    match db::blogs::create_blog(pool, &new_blog, user).await {
+                        Ok(resp) => conn.with_state(resp),
+                        Err(e) => {
+                            log::info!("POST /blogs error from database: {:?}", e);
+                            conn.with_status(Status::InternalServerError)
+                        }
                     }
+                } else {
+                    conn
                 }
             } else {
                 conn.with_status(Status::InternalServerError)

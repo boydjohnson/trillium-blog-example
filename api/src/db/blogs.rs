@@ -2,7 +2,10 @@ use super::DbError;
 use lazy_static::lazy_static;
 use regex::Regex;
 use sqlx::{Pool, Postgres};
-use types::blogs::{BlogResponse, NewBlogRequest};
+use types::{
+    blogs::{BlogResponse, NewBlogRequest},
+    users::User,
+};
 
 lazy_static! {
     static ref REGEX: Regex = Regex::new(r#"[\s]+"#).unwrap();
@@ -15,6 +18,7 @@ fn sluggify(title: &str) -> String {
 pub async fn create_blog(
     pool: &Pool<Postgres>,
     blog: &NewBlogRequest,
+    user: &User,
 ) -> Result<BlogResponse, DbError> {
     let slug = sluggify(&blog.title);
 
@@ -45,6 +49,13 @@ pub async fn create_blog(
     .fetch_one(&mut transaction)
     .await {
         Ok(resp) => {
+
+            if let Err(e) = sqlx::query!("INSERT into blog_authors(blog_id, user_id) VALUES ($1, $2);", resp.id, user.id).execute(&mut transaction).await {
+                transaction.rollback().await?;
+                return Err(DbError::from(e));
+            }
+
+
             transaction.commit().await?;
             Ok(resp)
         },

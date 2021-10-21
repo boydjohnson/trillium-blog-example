@@ -64,6 +64,14 @@ pub async fn list_blogs(pool: &Pool<Postgres>) -> Result<Vec<BlogResponse>, DbEr
     .await?)
 }
 
+pub async fn list_blog_authors(pool: &Pool<Postgres>, blog_id: i32) -> Result<Vec<User>, DbError> {
+    Ok(sqlx::query_as!(
+        User,
+        "SELECT u.id, u.username FROM users u JOIN blog_authors ba ON u.id = ba.user_id WHERE ba.blog_id = $1;",
+        blog_id
+    ).fetch_all(pool).await?)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

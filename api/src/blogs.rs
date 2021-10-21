@@ -2,6 +2,7 @@ use crate::db::{self};
 use sqlx::{Pool, Postgres};
 use trillium::{Conn, Status};
 use trillium_api::ApiConnExt;
+use trillium_router::RouterConnExt;
 use types::{
     blogs::{BlogResponse, NewBlogRequest},
     users::User,
@@ -52,5 +53,24 @@ pub async fn get_blogs(conn: Conn) -> Conn {
         }
     } else {
         conn.with_status(Status::InternalServerError)
+    }
+}
+
+pub async fn get_blog_authors(conn: Conn) -> Conn {
+    if let Some(blog_id) = conn.param("blog_id") {
+        if let Ok(blog_id) = blog_id.parse::<i32>() {
+            if let Some(pool) = conn.state::<Pool<Postgres>>() {
+                match db::blogs::list_blog_authors(pool, blog_id).await {
+                    Ok(users) => conn.with_status(Status::Ok).with_json(&users),
+                    Err(_) => conn.with_status(Status::InternalServerError),
+                }
+            } else {
+                conn.with_status(Status::InternalServerError)
+            }
+        } else {
+            conn.with_status(Status::BadRequest)
+        }
+    } else {
+        conn.with_status(Status::BadRequest)
     }
 }

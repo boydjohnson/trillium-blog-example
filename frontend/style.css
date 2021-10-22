@@ -1,0 +1,33 @@
+.bottom-buttons-right {
+    display: flex;
+    justify-content: flex-end;
+    width: 300px;
+    margin: auto;
+}
+
+.centered-content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 300px;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.buffered {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+
+body {
+    margin: 0%;
+}
+
+p {
+    font-family: Roboto;
+}
+
+mwc-textfield {
+    margin-bottom: 10px;
+}
